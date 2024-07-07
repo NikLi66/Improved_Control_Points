@@ -31,6 +31,7 @@ python eval.py
 - Adding CBAM modules.
 - Adding Coord Conv modules.
 - Adding some data augmentations widely used in dewarp task.
+- Optimizing the loss function by adding a weight mask.
 
 ## Training on your own dataset
 I strongly recommend you slightly change the codes in dataset/dataloader.py to make it works for your onw dataset. You only need to change the codes in __getitem__ and __init__ functions I suppose. The data format used in this project is following [Control Points](https://github.com/gwxie/Document-Dewarping-with-Control-Points). Please find more details in that repository if you like.
