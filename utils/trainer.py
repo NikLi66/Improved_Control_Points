@@ -162,7 +162,8 @@ class Trainer(object):
                 print_str += '[{0}:{1:.4f}]\t'.format(loss_name, self.val_loss.Loss[loss_name] / self.val_loss.cnt)
             print_str += '{0:.4f}'.format((self.val_loss.Loss['total']) / self.val_loss.cnt)
             print(print_str)
-
+        self.val_loss.reset()
+        
     def train(self):
         if self.args.rank == 0:
             print("Begin training from epoch {} to epoch {}".format(self.epoch, self.args.n_epoch))
