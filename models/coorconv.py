@@ -24,11 +24,14 @@ class AddCoords(nn.Module):
         # transpose y
         yy_channel = yy_channel.permute(0, 1, 3, 2)
 
-        xx_channel = xx_channel.float() / (dim_y - 1)
-        yy_channel = yy_channel.float() / (dim_x - 1)
+        # xx_channel = xx_channel.float() / (dim_y - 1)
+        # yy_channel = yy_channel.float() / (dim_x - 1)
 
-        xx_channel = xx_channel * 2 - 1
-        yy_channel = yy_channel * 2 - 1
+        # xx_channel = xx_channel * 2 - 1
+        # yy_channel = yy_channel * 2 - 1
+        
+        xx_channel = xx_channel.float()
+        yy_channel = yy_channel.float()
 
         xx_channel = xx_channel.repeat(batch_size_shape, 1, 1, 1)
         yy_channel = yy_channel.repeat(batch_size_shape, 1, 1, 1)
