@@ -15,7 +15,6 @@ def dilation_conv_bn_act(in_channels, out_dim, act_fn, BatchNorm, dilation=4):
     model = nn.Sequential(
         nn.Conv2d(in_channels, out_dim, kernel_size=3, stride=1, padding=dilation, dilation=dilation),
         BatchNorm(out_dim),
-        CBAM(out_dim),
         act_fn,
     )
     return model
@@ -162,10 +161,11 @@ class Network(nn.Module):
         self.resnet_down = ResNetV2Straight(num_filter, map_num, BatchNorm, block_nums=[3, 4, 6, 3],
                                               block=ResidualBlockWithDilated, dropRate=[0, 0, 0, 0],
                                               is_sub_dropout=False)
-
-        self.cbam = CBAM(self.num_filter)
-
+        
         map_num_i = 3
+        self.cbam_1 = CBAM(self.num_filter * map_num[0])
+        self.cbam_2 = CBAM(self.num_filter * map_num[map_num_i])
+
         self.bridge_1 = nn.Sequential(
             dilation_conv_bn_act(self.num_filter * map_num[map_num_i], self.num_filter * map_num[map_num_i],
                                  act_fn, BatchNorm, dilation=1),
@@ -236,8 +236,9 @@ class Network(nn.Module):
 
     def forward(self, x):
         resnet_head = self.resnet_head(x)
-        x = self.cbam(resnet_head)
+        x = self.cbam_1(resnet_head)
         resnet_down = self.resnet_down(x)
+        resnet_down = self.cbam_2(resnet_down)
 
         bridge_1 = self.bridge_1(resnet_down)
         bridge_2 = self.bridge_2(resnet_down)
